@@ -38,7 +38,42 @@ public class Player : MonoBehaviour
         if (Keyboard.current.dKey.isPressed) moveInput = 1f;
         
         rb.linearVelocity = new Vector2(moveInput * speed, rb.linearVelocity.y);
-        
-        
+
+        if (Keyboard.current.wKey.wasPressedThisFrame && canJump)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jump);
+            canJump = false;
+        }
+    }
+
+    public void Die()
+    {
+        isDead = true;
+        print("player died");
+    }
+
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            foreach (ContactPoint2D contact in collision.contacts)
+            {
+                canJump = true;
+                break;
+            }
+        }
+    }
+
+    public void OnCollisionEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            canJump = false;
+        }
+    }
+
+    public void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("DeathBar")) Die();
     }
 }
