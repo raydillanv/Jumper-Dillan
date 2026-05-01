@@ -8,7 +8,7 @@ public class AltitudeHandler : MonoBehaviour
     public TMP_Text maxAltitudeText;
 
     public float smoothSpeed = 5f;
-    private float maxAltitude;
+    private float maxAltitude = PlayerPrefs.GetFloat("MaxAltitude", 0f);
     private float startY;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
