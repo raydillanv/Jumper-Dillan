@@ -1,3 +1,4 @@
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -11,6 +12,8 @@ public class Player : MonoBehaviour
 
     public GameObject deathScreen;
 
+    public Animator animController; 
+    
     private Rigidbody2D rb;
     private bool canJump = false;
     private bool isDead = false;
@@ -32,7 +35,13 @@ public class Player : MonoBehaviour
         
         float moveInput = 0f;
         if (Keyboard.current.aKey.isPressed) moveInput = -1f;
+        
         if (Keyboard.current.dKey.isPressed) moveInput = 1f;
+
+        if (Keyboard.current.aKey.isPressed || Keyboard.current.dKey.isPressed)
+        {
+            animController.SetTrigger("run");
+        }
         rb.linearVelocity = new Vector2(moveInput * speed, rb.linearVelocity.y);
         
         if (Keyboard.current.wKey.wasPressedThisFrame && canJump)
