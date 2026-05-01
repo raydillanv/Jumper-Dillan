@@ -1,44 +1,40 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     public float speed = 8f;
-    public float jump = 10f; 
+    public float jump = 12f;
     
     public AltitudeHandler altitudeHandler;
 
-    private Rigidbody2D rb;
+    public GameObject deathScreen;
 
+    private Rigidbody2D rb;
     private bool canJump = false;
     private bool isDead = false;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        if (deathScreen) deathScreen.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (isDead)
         {
             if (Keyboard.current.wKey.wasPressedThisFrame)
-            {
-            
-            } 
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            return;
         }
-
-
-
-        float moveInput = 0f; 
         
+        float moveInput = 0f;
         if (Keyboard.current.aKey.isPressed) moveInput = -1f;
         if (Keyboard.current.dKey.isPressed) moveInput = 1f;
-        
         rb.linearVelocity = new Vector2(moveInput * speed, rb.linearVelocity.y);
-
+        
         if (Keyboard.current.wKey.wasPressedThisFrame && canJump)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jump);
@@ -48,32 +44,36 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
+        if (isDead) return;
         isDead = true;
-        print("player died");
+        rb.linearVelocity = Vector2.zero;
+        rb.simulated = false; 
+        if (deathScreen) deathScreen.SetActive(true);
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
             foreach (ContactPoint2D contact in collision.contacts)
             {
-                canJump = true;
-                break;
+                if (contact.normal.y > 0.5f)
+                {
+                    canJump = true;
+                    break;
+                }
             }
         }
     }
 
-    public void OnCollisionEnter2D(Collider2D collision)
+    void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
-        {
             canJump = false;
-        }
     }
 
-    public void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("DeathBar")) Die();
+        if (other.CompareTag("DeathBar")) Die();
     }
 }
