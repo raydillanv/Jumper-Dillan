@@ -50,7 +50,7 @@ public class Player : MonoBehaviour
             canJump = false;
         }
     }
-
+    
     public void Die()
     {
         if (isDead) return;
