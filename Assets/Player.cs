@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private bool canJump = false;
     private bool isDead = false;
+    
+    public AudioSource audioSource;
+    public AudioClip jumpClip;
 
     void Start()
     {
@@ -47,6 +50,7 @@ public class Player : MonoBehaviour
         if (Keyboard.current.wKey.wasPressedThisFrame && canJump)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jump);
+            audioSource.PlayOneShot(jumpClip);
             canJump = false;
         }
     }

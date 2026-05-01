@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor;
 
 public class PlatformSpawner : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class PlatformSpawner : MonoBehaviour
     {
         nextSpawnY = player.position.y;
         for (int i = 0; i < 10; i++) SpawnPlatform();
+        
     }
 
     void Update()
